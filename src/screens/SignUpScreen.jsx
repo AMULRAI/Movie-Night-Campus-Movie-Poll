@@ -41,7 +41,7 @@ export default function SignUpScreen({ navigation }) {
                 <Text style={styles.label}>STUDENT ID / ROLL NO.</Text>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputIcon}>🪪</Text>
-                    <TextInput style={styles.input} placeholder="PST-25-0122" placeholderTextColor="#6b6b88" />
+                    <TextInput style={styles.input} placeholder="PST-_-_" placeholderTextColor="#6b6b88" />
                 </View>
 
                 <Text style={styles.label}>CAMPUS EMAIL</Text>

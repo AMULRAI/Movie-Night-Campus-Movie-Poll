@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -86,10 +87,12 @@ export default function LoginScreen({ navigation }) {
 
                         <View style={styles.socialRow}>
                             <TouchableOpacity style={styles.socialButton}>
-                                <Text style={styles.socialText}>🔵 Google</Text>
+                                <Ionicons name="logo-google" size={20} color="#4285F4" />
+                                <Text style={styles.socialText}>Google</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.socialButton}>
-                                <Text style={styles.socialText}>🍎 Apple</Text>
+                                <Ionicons name="logo-apple" size={20} color="#fff" />
+                                <Text style={styles.socialText}>Apple</Text>
                             </TouchableOpacity>
                         </View>
 
