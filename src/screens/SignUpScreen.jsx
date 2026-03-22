@@ -1,9 +1,41 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { registerUser } from '../services/authService';
 
 export default function SignUpScreen({ navigation }) {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [studentId, setStudentId] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [role, setRole] = useState('student');
+    const [loading, setLoading] = useState(false);
+
+    const handleSignup = async () => {
+        if (!firstName.trim() || !lastName.trim() || !studentId.trim() || !email.trim() || !password) {
+            Alert.alert('Error', 'Please fill in all fields.');
+            return;
+        }
+        if (!email.includes('@')) {
+            Alert.alert('Error', 'Please enter a valid email address with an @ symbol.');
+            return;
+        }
+        if (password.length < 6) {
+            Alert.alert('Error', 'Password must be at least 6 characters long.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await registerUser(firstName.trim(), lastName.trim(), studentId.trim(), email.trim(), password, role);
+            navigation.replace('Home');
+        } catch (error) {
+            Alert.alert('Registration Failed', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -27,13 +59,13 @@ export default function SignUpScreen({ navigation }) {
                         <Text style={styles.label}>FIRST NAME</Text>
                         <View style={styles.inputContainer}>
                             <Text style={styles.inputIcon}>👤</Text>
-                            <TextInput style={styles.input} placeholderTextColor="#6b6b88" placeholder="First" />
+                            <TextInput style={styles.input} placeholderTextColor="#6b6b88" placeholder="First" value={firstName} onChangeText={setFirstName} />
                         </View>
                     </View>
                     <View style={{ flex: 1, marginLeft: 8 }}>
                         <Text style={styles.label}>LAST NAME</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={[styles.input, { marginLeft: 0 }]} placeholderTextColor="#6b6b88" placeholder="Last" />
+                            <TextInput style={[styles.input, { marginLeft: 0 }]} placeholderTextColor="#6b6b88" placeholder="Last" value={lastName} onChangeText={setLastName} />
                         </View>
                     </View>
                 </View>
@@ -41,13 +73,13 @@ export default function SignUpScreen({ navigation }) {
                 <Text style={styles.label}>STUDENT ID / ROLL NO.</Text>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputIcon}>🪪</Text>
-                    <TextInput style={styles.input} placeholder="PST-_-_" placeholderTextColor="#6b6b88" />
+                    <TextInput style={styles.input} placeholder="PST-_-_" placeholderTextColor="#6b6b88" value={studentId} onChangeText={setStudentId} />
                 </View>
 
                 <Text style={styles.label}>CAMPUS EMAIL</Text>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputIcon}>📧</Text>
-                    <TextInput style={styles.input} placeholder="student@campus.edu" placeholderTextColor="#6b6b88" />
+                    <TextInput style={styles.input} placeholder="student@campus.edu" placeholderTextColor="#6b6b88" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
                 </View>
 
                 <Text style={styles.label}>YOUR ROLE</Text>
@@ -73,7 +105,7 @@ export default function SignUpScreen({ navigation }) {
                 <Text style={styles.label}>PASSWORD</Text>
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputIcon}>🔒</Text>
-                    <TextInput style={styles.input} placeholder="Create a strong password" placeholderTextColor="#6b6b88" secureTextEntry />
+                    <TextInput style={styles.input} placeholder="Create a strong password" placeholderTextColor="#6b6b88" secureTextEntry value={password} onChangeText={setPassword} />
                 </View>
                 
                 {/* Password Strength Indicator */}
@@ -89,9 +121,13 @@ export default function SignUpScreen({ navigation }) {
                     <Text style={styles.checkboxText}>I agree to the <Text style={styles.redText}>Terms of Service</Text> and <Text style={styles.redText}>Privacy Policy</Text> of MovieNight</Text>
                 </View>
 
-                <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 24 }} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 24 }} onPress={handleSignup} disabled={loading}>
                     <LinearGradient colors={['#ff3c3c', '#ff8c42']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.primaryButton}>
-                        <Text style={styles.primaryButtonText}>🎬 Create Account</Text>
+                        {loading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.primaryButtonText}>🎬 Create Account</Text>
+                        )}
                     </LinearGradient>
                 </TouchableOpacity>
                 

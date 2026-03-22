@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { loginUser } from '../services/authService';
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (!email.trim() || !password.trim()) {
-            setErrorMessage('Please enter both email and password.');
+            Alert.alert('Error', 'Please enter both email and password.');
             return;
         }
-        setErrorMessage('');
-        navigation.navigate('Home');
+        
+        setLoading(true);
+        try {
+            await loginUser(email.trim(), password);
+            navigation.replace('Home');
+        } catch (error) {
+            Alert.alert('Login Failed', error.message);
+        } finally {
+            setLoading(false);
+        }
     };
     return (
         <SafeAreaView style={styles.container}>
@@ -71,11 +80,13 @@ export default function LoginScreen({ navigation }) {
                             <Text style={styles.forgotText}>Forgot password?</Text>
                         </TouchableOpacity>
 
-                        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-
-                        <TouchableOpacity activeOpacity={0.8} onPress={handleLogin} style={{ marginTop: errorMessage ? 8 : 24 }}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={handleLogin} style={{ marginTop: 24 }} disabled={loading}>
                             <LinearGradient colors={['#ff3c3c', '#ff8c42']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.primaryButton}>
-                                <Text style={styles.primaryButtonText}>Sign In →</Text>
+                                {loading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.primaryButtonText}>Sign In →</Text>
+                                )}
                             </LinearGradient>
                         </TouchableOpacity>
 
