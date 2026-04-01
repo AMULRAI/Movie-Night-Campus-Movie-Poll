@@ -87,18 +87,20 @@ export default function SignUpScreen({ navigation }) {
                     <TouchableOpacity 
                         style={[styles.roleCard, role === 'student' && styles.roleCardActive]} 
                         onPress={() => setRole('student')}
+                        activeOpacity={0.8}
                     >
                         <Text style={styles.roleIcon}>🎓</Text>
                         <Text style={[styles.roleTitle, role === 'student' && {color: '#fff'}]}>Student</Text>
-                        <Text style={styles.roleSub}>Suggest & vote</Text>
+                        <Text style={styles.roleSub}>Suggest & vote on movies</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={[styles.roleCard, role === 'admin' && styles.roleCardActive]} 
                         onPress={() => setRole('admin')}
+                        activeOpacity={0.8}
                     >
                         <Text style={styles.roleIcon}>🛡️</Text>
                         <Text style={[styles.roleTitle, role === 'admin' && {color: '#fff'}]}>Admin</Text>
-                        <Text style={styles.roleSub}>Moderate polls</Text>
+                        <Text style={styles.roleSub}>Manage polls & moderate</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -155,11 +157,11 @@ const styles = StyleSheet.create({
     inputIcon: { fontSize: 18, marginRight: 12 },
     input: { flex: 1, color: '#fff', fontSize: 16 },
     roleRow: { flexDirection: 'row', gap: 16 },
-    roleCard: { flex: 1, backgroundColor: '#1a1a26', padding: 16, borderRadius: 16, borderWidth: 1, borderColor: '#2d2d3d', alignItems: 'center' },
-    roleCardActive: { borderColor: '#ff3c3c', backgroundColor: 'rgba(255, 60, 60, 0.05)' },
+    roleCard: { flex: 1, backgroundColor: '#1a1a26', paddingVertical: 14, paddingHorizontal: 10, borderRadius: 14, borderWidth: 1, borderColor: '#2d2d3d', alignItems: 'center' },
+    roleCardActive: { borderColor: '#ff3c3c', backgroundColor: 'rgba(255, 60, 60, 0.08)' },
     roleIcon: { fontSize: 24, marginBottom: 8 },
-    roleTitle: { color: '#6b6b88', fontSize: 16, fontWeight: 'bold', marginBottom: 4 },
-    roleSub: { color: '#6b6b88', fontSize: 11 },
+    roleTitle: { color: '#6b6b88', fontSize: 13, fontWeight: '600', marginBottom: 4 },
+    roleSub: { color: '#6b6b88', fontSize: 11, textAlign: 'center' },
     strengthRow: { marginTop: 12 },
     strengthBarBg: { height: 4, backgroundColor: '#2d2d3d', borderRadius: 2, marginBottom: 8, overflow: 'hidden' },
     strengthBarFill: { height: '100%', borderRadius: 2 },

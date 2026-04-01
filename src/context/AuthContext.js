@@ -32,10 +32,12 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const isAdmin = userProfile?.role === 'admin';
+  const role = userProfile?.role || null;
+  const isAdmin = role === 'admin';
+  const isStudent = role === 'student';
 
   return (
-    <AuthContext.Provider value={{ user, userProfile, loading, isAdmin }}>
+    <AuthContext.Provider value={{ user, userProfile, loading, role, isAdmin, isStudent }}>
       {children}
     </AuthContext.Provider>
   );
