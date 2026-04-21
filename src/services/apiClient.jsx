@@ -1,28 +1,37 @@
 /**
- * Placeholder for global config, API URLs, API response handlers
+ * API Client for interacting with the Node.js Express backend.
+ * This is meant specifically for secure and admin-level operations that shouldn't be done
+ * purely client-side via Firebase SDK.
  */
-const BASE_URL = 'http://localhost:5000/api';
 
-export const fetchPolls = async () => {
-    try {
-        const response = await fetch(`${BASE_URL}/polls`);
-        return await response.json();
-    } catch (error) {
-        console.error("API error", error);
-        return [];
-    }
-};
+// If running on Android Emulator, localhost is 10.0.2.2. If iOS, it's localhost.
+// Assuming Web or general use for now (can map via ENV later)
+import { Platform } from 'react-native';
 
-export const login = async (email, password) => {
+const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5000/api' : 'http://localhost:5000/api';
+
+export const banUserAPI = async (userId) => {
     try {
-        const response = await fetch(`${BASE_URL}/auth/login`, {
+        const response = await fetch(`${BASE_URL}/admin/users/${userId}/ban`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            headers: { 'Content-Type': 'application/json' }
         });
         return await response.json();
     } catch (error) {
-        console.error("API error", error);
-        return { error: 'Login failed' };
+        console.error("API error banning user:", error);
+        return { error: 'Failed to ban user' };
     }
-}
+};
+
+export const resolveFlagAPI = async (flagId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/admin/flags/${flagId}/resolve`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("API error resolving flag:", error);
+        return { error: 'Failed to resolve flag' };
+    }
+};

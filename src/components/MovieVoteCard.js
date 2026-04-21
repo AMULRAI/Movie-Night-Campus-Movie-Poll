@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import PillTag from './PillTag';
 
 export default function MovieVoteCard({
   id, title, genre, duration, language,
@@ -41,9 +40,9 @@ export default function MovieVoteCard({
             )}
           </View>
           <View style={styles.tagsRow}>
-            {genre && <PillTag label={genre} color="#aaaaaa" />}
-            {duration && <PillTag label={duration} color="#aaaaaa" />}
-            {language && <PillTag label={language} color="#aaaaaa" />}
+            {genre && <View style={styles.tag}><Text style={styles.tagText}>{genre}</Text></View>}
+            {duration && <View style={styles.tag}><Text style={styles.tagText}>{duration}</Text></View>}
+            {language && <View style={styles.tag}><Text style={styles.tagText}>{language}</Text></View>}
           </View>
           <View style={styles.progressSection}>
             <View style={styles.track}>
@@ -140,6 +139,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 6,
     marginTop: 6,
+  },
+  tag: {
+    backgroundColor: '#0a0a0f',
+    borderRadius: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+  },
+  tagText: {
+    fontSize: 11,
+    color: '#aaaaaa',
   },
   progressSection: {
     marginTop: 12,

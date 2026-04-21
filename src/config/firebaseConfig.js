@@ -1,10 +1,9 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getAnalytics } from "firebase/analytics";
 
-// Replace the config values with the ones you copied from Firebase in Step 1.
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDqc52UiAHkyuR6toNwKX894mshWocnf34",
   authDomain: "movienight-app-2e8b1.firebaseapp.com",
@@ -17,7 +16,8 @@ const firebaseConfig = {
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// NOTE: Analytics is NOT supported in React Native — removed getAnalytics()
 
 // Initialize Firebase Auth with AsyncStorage persistence
 const auth = initializeAuth(app, {

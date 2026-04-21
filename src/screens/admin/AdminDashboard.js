@@ -1,221 +1,228 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert, Switch } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
-import RoleGuard from '../../components/RoleGuard';
-import { logoutUser } from '../../services/authService';
+import { getAdminStats, getFlaggedUsers, banUser, subscribeToActivePoll, subscribeToVoteCounts } from '../../services/firestoreService';
+import BottomTabBar from '../../components/BottomTabBar';
 
 export default function AdminDashboard() {
-  const { userProfile } = useAuth();
   const navigation = useNavigation();
+  const { user } = useAuth();
 
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      navigation.navigate('Login');
-    } catch (error) {
-      Alert.alert('Logout Error', error.message || 'Failed to logout');
+  const [dashStats, setDashStats] = useState(null);
+  const [flaggedUsers, setFlaggedUsers] = useState([]);
+  const [activePoll, setActivePoll] = useState(null);
+  const [totalVotes, setTotalVotes] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [oneVoteEnforced, setOneVoteEnforced] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      getAdminStats(),
+      getFlaggedUsers()
+    ]).then(([stats, flags]) => {
+      setDashStats(stats);
+      setFlaggedUsers(flags);
+      setLoading(false);
+    }).catch((err) => {
+      console.log('Error fetching stats:', err);
+      setLoading(false);
+    });
+
+    const unsubPoll = subscribeToActivePoll((poll) => {
+      setActivePoll(poll);
+    });
+
+    return () => unsubPoll();
+  }, []);
+
+  useEffect(() => {
+    let unsubVotes = () => {};
+    if (activePoll && (activePoll._id || activePoll.id)) {
+      unsubVotes = subscribeToVoteCounts(activePoll._id || activePoll.id, (counts) => {
+        const total = Object.values(counts).reduce((a, b) => a + b, 0);
+        setTotalVotes(total);
+      });
     }
+    return () => unsubVotes();
+  }, [activePoll]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <StatusBar barStyle="light-content" backgroundColor="#0a0a0f" />
+        <ActivityIndicator color="#ff3c3c" size="large" />
+        <Text style={styles.loadingText}>Loading dashboard...</Text>
+      </View>
+    );
+  }
+
+  const st = dashStats || {};
+  const stats = {
+    totalUsers: st.totalUsers || 0,
+    activePolls: st.activePolls || 0,
+    eventsScheduled: st.eventsScheduled || 0,
+    seatsBooked: st.seatsBooked || 0,
+    seatsRemaining: st.seatsRemaining || 0,
   };
 
-  const name = userProfile?.firstName ? `${userProfile.firstName} ${userProfile?.lastName || ''}`.trim() : 'Admin';
-  const email = userProfile?.email || '';
-
-  const actions = [
-    { title: 'Manage Polls', subtitle: 'Create and edit movie polls', icon: '📊', route: '/admin/polls' },
-    { title: 'Approve Movies', subtitle: 'Review movie suggestions', icon: '🎬', route: '/admin/movies' },
-    { title: 'View Students', subtitle: 'Manage student accounts', icon: '👥', route: '/admin/students' },
-    { title: 'Schedule Event', subtitle: 'Plan upcoming movie nights', icon: '🗓️', route: '/admin/events' },
-    { title: 'View Analytics', subtitle: 'Check voting and attendance stats', icon: '📈', route: '/admin/analytics' },
-  ];
+  const handleBanUser = (flaggedUser) => {
+    Alert.alert('Confirm Ban', `Are you sure you want to ban ${flaggedUser.username || 'this user'}?`, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Ban', style: 'destructive', onPress: async () => {
+        try {
+          await banUser(flaggedUser.userId || flaggedUser._id);
+          setFlaggedUsers(prev => prev.filter(f => f._id !== flaggedUser._id));
+          Alert.alert('User banned');
+        } catch (err) {
+          Alert.alert('Error', err.message);
+        }
+      }}
+    ]);
+  };
 
   return (
-    <RoleGuard allowedRoles={['admin']} fallbackRoute="/student/dashboard">
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.headerText}>
-              <Text style={styles.greeting}>Welcome back, Admin 🛡️</Text>
-              <Text style={styles.pollTitle}>Friday Movie Night</Text>
-              <Text style={styles.pollSubtitle}>Ends in 02:45:30</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" backgroundColor="#0a0a0f" />
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.headerSub}>ADMIN DASHBOARD</Text>
+            <Text style={styles.headerTitle}>Analytics & Moderation</Text>
+          </View>
+        </View>
+
+        {/* Stats Cards */}
+        <View style={styles.statsGrid}>
+          <View style={styles.statCard}>
+            <Text style={styles.statEmoji}>👥</Text>
+            <Text style={styles.statValue}>{stats.totalUsers}</Text>
+            <Text style={styles.statLabel}>Total Users</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statEmoji}>🗳️</Text>
+            <Text style={styles.statValue}>{stats.activePolls}</Text>
+            <Text style={styles.statLabel}>Active Polls</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statEmoji}>🎬</Text>
+            <Text style={styles.statValue}>{stats.eventsScheduled}</Text>
+            <Text style={styles.statLabel}>Events</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statEmoji}>🎟️</Text>
+            <Text style={styles.statValue}>{stats.seatsBooked}</Text>
+            <Text style={styles.statLabel}>Seats Booked</Text>
+          </View>
+        </View>
+
+        {/* Live Vote Counter */}
+        <View style={styles.liveCard}>
+          <View style={styles.liveHeader}>
+            <View style={styles.liveIndicator} />
+            <Text style={styles.liveTitle}>LIVE VOTE COUNTER</Text>
+          </View>
+          <Text style={styles.liveBigNumber}>{totalVotes}</Text>
+          <Text style={styles.liveSub}>total votes · {activePoll?.title || 'No active poll'}</Text>
+        </View>
+
+        {/* Moderation Panel */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionEmoji}>🛡️</Text>
+            <Text style={styles.sectionName}>Moderation Panel</Text>
+            <View style={styles.pendingBadge}>
+              <Text style={styles.pendingBadgeText}>{flaggedUsers.length} PENDING</Text>
             </View>
-            <TouchableOpacity style={styles.manageButton} onPress={() => navigation.navigate('/admin/polls')}>
-              <Text style={styles.manageButtonText}>Manage Poll →</Text>
-            </TouchableOpacity>
           </View>
 
-          {/* Stats Grid */}
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>🗳️</Text>
-              <Text style={styles.statNumber}>3</Text>
-              <Text style={styles.statLabel}>Active Polls</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>🎬</Text>
-              <Text style={styles.statNumber}>12</Text>
-              <Text style={styles.statLabel}>Total Movies</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>👥</Text>
-              <Text style={styles.statNumber}>48</Text>
-              <Text style={styles.statLabel}>Total Students</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>🎟️</Text>
-              <Text style={styles.statNumber}>31</Text>
-              <Text style={styles.statLabel}>Seats Booked</Text>
-            </View>
-          </View>
-
-          {/* Admin Actions */}
-          <Text style={styles.sectionTitle}>Admin Actions</Text>
-          <View style={styles.actionsList}>
-            {actions.map((action, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.actionCard}
-                onPress={() => navigation.navigate(action.route)}
-              >
-                <View style={styles.actionIconContainer}>
-                  <Text style={styles.actionIcon}>{action.icon}</Text>
+          {flaggedUsers.length === 0 ? (
+            <Text style={styles.emptyText}>No pending moderation items.</Text>
+          ) : (
+            flaggedUsers.map((userObj, idx) => (
+              <View key={userObj._id || idx} style={[styles.modRow, idx < flaggedUsers.length - 1 && styles.modRowBorder]}>
+                <View style={[styles.severityDot, { backgroundColor: userObj.severity === 'high' ? '#ff3c3c' : '#ffd166' }]} />
+                <View style={styles.modInfo}>
+                  <Text style={styles.modUsername}>{userObj.username || 'anon_user'}</Text>
+                  <Text style={styles.modReason}>{userObj.reason || 'Flagged activity'}</Text>
                 </View>
-                <View style={styles.actionTextContainer}>
-                  <Text style={styles.actionTitle}>{action.title}</Text>
-                  <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
-                </View>
-                <Text style={styles.actionArrow}>→</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+                <TouchableOpacity style={styles.banBtn} onPress={() => handleBanUser(userObj)}>
+                  <Text style={styles.banBtnText}>Ban</Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </View>
 
-        </ScrollView>
-      </View>
-    </RoleGuard>
+        {/* Spam Detection */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionEmoji}>🤖</Text>
+            <Text style={styles.sectionName}>Spam Detection</Text>
+          </View>
+          <View style={styles.toggleRow}>
+            <View>
+              <Text style={styles.toggleTitle}>One Vote Per User</Text>
+              <Text style={styles.toggleSub}>Enforcement: {oneVoteEnforced ? 'Active' : 'Inactive'}</Text>
+            </View>
+            <Switch
+              value={oneVoteEnforced}
+              onValueChange={setOneVoteEnforced}
+              trackColor={{ false: '#333', true: '#ff3c3c' }}
+              thumbColor={oneVoteEnforced ? '#ffffff' : '#f4f3f4'}
+            />
+          </View>
+          <View style={styles.adminBanner}>
+            <Text style={{ fontSize: 14 }}>🔒</Text>
+            <Text style={styles.adminBannerText}>Admin-only controls — hidden from students</Text>
+          </View>
+        </View>
+
+      </ScrollView>
+      <BottomTabBar activeTab="home" role="admin" />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0a0a0f',
-  },
-  scrollContent: {
-    padding: 24,
-    paddingTop: 60, // approximate safe area for header spacing
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 32,
-  },
-  headerText: {
-    flex: 1,
-    paddingRight: 16,
-  },
-  greeting: {
-    fontSize: 14,
-    color: '#ff3c3c',
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 14,
-    color: '#6b6b88',
-  },
-  logoutButton: {
-    backgroundColor: 'rgba(255, 60, 60, 0.15)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  logoutText: {
-    color: '#ff3c3c',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 32,
-  },
-  statCard: {
-    width: '48%',
-    backgroundColor: '#1a1a26',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-  },
-  statIcon: {
-    fontSize: 20,
-    marginBottom: 12,
-  },
-  statNumber: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#6b6b88',
-    fontWeight: '500',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 16,
-  },
-  actionsList: {
-    gap: 12, // vertical gap between elements
-  },
-  actionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1a1a26',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.07)',
-    borderRadius: 14,
-    padding: 16,
-  },
-  actionIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 60, 60, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  actionIcon: {
-    fontSize: 18,
-  },
-  actionTextContainer: {
-    flex: 1,
-  },
-  actionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ffffff',
-    marginBottom: 4,
-  },
-  actionSubtitle: {
-    fontSize: 12,
-    color: '#6b6b88',
-  },
-  actionArrow: {
-    fontSize: 20,
-    color: '#6b6b88',
-  },
+  loadingContainer: { flex: 1, backgroundColor: '#0a0a0f', justifyContent: 'center', alignItems: 'center' },
+  loadingText: { fontSize: 14, color: '#8e8e93', marginTop: 12 },
+  safeArea: { flex: 1, backgroundColor: '#0a0a0f', paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 },
+  scrollContent: { padding: 24, paddingBottom: 100 },
+  header: { marginBottom: 24 },
+  headerSub: { fontSize: 11, fontWeight: '600', color: '#6b6b88', letterSpacing: 1.5, marginBottom: 4 },
+  headerTitle: { fontSize: 24, fontWeight: '700', color: '#ffffff' },
+  statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: 16 },
+  statCard: { width: '48%', backgroundColor: '#1c1c2e', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)', paddingVertical: 18, paddingHorizontal: 16, marginBottom: 10 },
+  statEmoji: { fontSize: 24, marginBottom: 10 },
+  statValue: { fontSize: 32, color: '#ffffff', fontWeight: '700' },
+  statLabel: { fontSize: 12, color: '#6b6b88', marginTop: 4 },
+  liveCard: { backgroundColor: '#1c1c2e', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)', padding: 20, marginBottom: 16 },
+  liveHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  liveIndicator: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#00c864', marginRight: 8 },
+  liveTitle: { fontSize: 12, fontWeight: '700', color: '#ffffff', letterSpacing: 1.5 },
+  liveBigNumber: { fontSize: 52, fontWeight: '800', color: '#ffffff', lineHeight: 54 },
+  liveSub: { fontSize: 13, color: '#6b6b88', marginTop: 4 },
+  sectionCard: { backgroundColor: '#1c1c2e', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.07)', padding: 20, marginBottom: 16 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  sectionEmoji: { fontSize: 18, marginRight: 8 },
+  sectionName: { fontSize: 16, fontWeight: '600', color: '#ffffff', flex: 1 },
+  pendingBadge: { backgroundColor: 'rgba(255,60,60,0.15)', borderRadius: 20, paddingVertical: 4, paddingHorizontal: 10 },
+  pendingBadgeText: { fontSize: 11, fontWeight: '700', color: '#ff3c3c', letterSpacing: 0.5 },
+  emptyText: { textAlign: 'center', color: '#6b6b88', marginTop: 8 },
+  modRow: { paddingVertical: 12, flexDirection: 'row', alignItems: 'center' },
+  modRowBorder: { borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)' },
+  severityDot: { width: 10, height: 10, borderRadius: 5, marginRight: 12 },
+  modInfo: { flex: 1 },
+  modUsername: { fontSize: 14, fontWeight: '600', color: '#ffffff' },
+  modReason: { fontSize: 12, color: '#6b6b88', marginTop: 2 },
+  banBtn: { backgroundColor: 'rgba(255,60,60,0.15)', borderWidth: 1, borderColor: 'rgba(255,60,60,0.3)', borderRadius: 8, paddingVertical: 6, paddingHorizontal: 14 },
+  banBtnText: { fontSize: 12, fontWeight: '600', color: '#ff3c3c' },
+  toggleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  toggleTitle: { fontSize: 15, fontWeight: '600', color: '#ffffff' },
+  toggleSub: { fontSize: 12, color: '#6b6b88', marginTop: 2 },
+  adminBanner: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.03)', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 8 },
+  adminBannerText: { fontSize: 12, color: '#6b6b88', marginLeft: 8 },
 });

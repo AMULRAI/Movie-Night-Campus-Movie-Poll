@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -41,15 +42,15 @@ export default function LivePollCard({
       <View style={styles.countdownRow}>
         <View style={styles.box}>
           <Text style={styles.numberText}>{pad(h)}</Text>
-          <Text style={styles.labelText}>HOURS</Text>
+          <Text style={styles.labelText}>HRS</Text>
         </View>
         <View style={styles.box}>
           <Text style={styles.numberText}>{pad(m)}</Text>
-          <Text style={styles.labelText}>MINUTES</Text>
+          <Text style={styles.labelText}>MIN</Text>
         </View>
         <View style={styles.box}>
           <Text style={styles.numberText}>{pad(s)}</Text>
-          <Text style={styles.labelText}>SECONDS</Text>
+          <Text style={styles.labelText}>SEC</Text>
         </View>
       </View>
     </View>

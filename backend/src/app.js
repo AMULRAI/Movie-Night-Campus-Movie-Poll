@@ -21,6 +21,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/polls', pollRoutes);
+app.use('/api/admin', require('./routes/admin.routes')); // Added admin routes
 
 // Global Error Handler
 app.use(errorMiddleware);

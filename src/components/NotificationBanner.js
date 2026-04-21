@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 export default function NotificationBanner({ type = 'info', title, subtitle, onDismiss, visible = true }) {
   if (!visible) return null;
 
-  let config = { icon: 'ℹ️', color: '#3c82f6', border: 'rgba(60,130,246,0.2)' };
-  if (type === 'warning') config = { icon: '⚠️', color: '#ffd166', border: 'rgba(255,209,102,0.2)' };
+  let config = { icon: 'ℹ️', color: '#6b6b88', border: 'rgba(255,255,255,0.07)' };
+  if (type === 'warning') config = { icon: 'ℹ️', color: '#6b6b88', border: 'rgba(255,255,255,0.07)' };
   else if (type === 'success') config = { icon: '✅', color: '#00c864', border: 'rgba(0,200,100,0.2)' };
 
   const hexToRgba = (hex, opacity) => {
@@ -17,7 +17,7 @@ export default function NotificationBanner({ type = 'info', title, subtitle, onD
 
   return (
     <View style={[styles.container, { borderColor: config.border }]}>
-      <View style={[styles.iconCircle, { backgroundColor: hexToRgba(config.color, 0.12) }]}>
+      <View style={[styles.iconCircle, { backgroundColor: config.color }]}>
         <Text style={styles.icon}>{config.icon}</Text>
       </View>
       <View style={styles.textBlock}>
@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   closeText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#6b6b88',
   },
 });

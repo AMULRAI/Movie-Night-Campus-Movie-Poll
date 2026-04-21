@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-import StudentHome from './student/StudentHome';
+import StudentDashboard from './student/StudentDashboard';
 import AdminHome from './admin/AdminHome';
 
 export default function HomeScreen() {
@@ -19,7 +19,7 @@ export default function HomeScreen() {
         return <AdminHome />;
     }
 
-    return <StudentHome />;
+    return <StudentDashboard />;
 }
 
 const styles = StyleSheet.create({
