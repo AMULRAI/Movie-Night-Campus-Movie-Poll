@@ -18,7 +18,7 @@ export const banUserAPI = async (userId) => {
         });
         return await response.json();
     } catch (error) {
-        console.error("API error banning user:", error);
+        console.warn("API warning banning user:", error.message);
         return { error: 'Failed to ban user' };
     }
 };
@@ -31,7 +31,7 @@ export const resolveFlagAPI = async (flagId) => {
         });
         return await response.json();
     } catch (error) {
-        console.error("API error resolving flag:", error);
+        console.warn("API warning resolving flag:", error.message);
         return { error: 'Failed to resolve flag' };
     }
 };

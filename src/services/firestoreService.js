@@ -120,13 +120,16 @@ export function subscribeToActivePoll(callback) {
     collection(db, 'polls'),
     where('status', '==', 'active')
   )
-  return onSnapshot(q, (snap) => {
-    const polls = snap.docs.map(d => ({ _id: d.id, ...d.data() }))
-    console.log("Active Polls found:", polls.length);
-    callback(polls[0] || null)
-  }, (error) => {
-    console.log("subscribeToActivePoll error:", error.message);
-    callback(null);
+  return onSnapshot(q, {
+    next: (snap) => {
+      const polls = snap.docs.map(d => ({ _id: d.id, ...d.data() }))
+      console.log("Active Polls found:", polls.length);
+      callback(polls[0] || null)
+    },
+    error: (error) => {
+      console.log("subscribeToActivePoll error:", error.message);
+      callback(null);
+    }
   })
 }
 
@@ -179,13 +182,19 @@ export function subscribeToVoteCounts(pollId, callback) {
     collection(db, 'votes'),
     where('pollId', '==', pollId)
   )
-  return onSnapshot(q, (snap) => {
-    const counts = {}
-    snap.docs.forEach(d => {
-      const { movieId } = d.data()
-      counts[movieId] = (counts[movieId] || 0) + 1
-    })
-    callback(counts)
+  return onSnapshot(q, {
+    next: (snap) => {
+      const counts = {}
+      snap.docs.forEach(d => {
+        const { movieId } = d.data()
+        counts[movieId] = (counts[movieId] || 0) + 1
+      })
+      callback(counts)
+    },
+    error: (error) => {
+      console.log("subscribeToVoteCounts error:", error.message);
+      callback({});
+    }
   })
 }
 
@@ -227,9 +236,15 @@ export async function getUserBooking(userId, eventId) {
 }
 
 export function subscribeToEvent(eventId, callback) {
-  return onSnapshot(doc(db, 'events', eventId), (snap) => {
-    if (snap.exists()) callback({ _id: snap.id, ...snap.data() })
-    else callback(null)
+  return onSnapshot(doc(db, 'events', eventId), {
+    next: (snap) => {
+      if (snap.exists()) callback({ _id: snap.id, ...snap.data() })
+      else callback(null)
+    },
+    error: (error) => {
+      console.log("subscribeToEvent error:", error.message);
+      callback(null);
+    }
   })
 }
 

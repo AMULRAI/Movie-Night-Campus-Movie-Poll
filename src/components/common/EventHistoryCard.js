@@ -73,7 +73,7 @@ export default function EventHistoryCard({
                   key={idx} 
                   style={[
                     styles.miniBar, 
-                    { height: height, backgroundColor: isLast ? '#1c1c2e' : '#e5e5ea' }
+                    { height: height, backgroundColor: isLast ? '#ff3c3c' : 'rgba(255,255,255,0.1)' }
                   ]} 
                 />
               );
@@ -102,15 +102,12 @@ export default function EventHistoryCard({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#1c1c2e',
     borderRadius: 20,
     marginHorizontal: 16,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.07)',
     padding: 16,
     overflow: 'hidden',
   },
@@ -121,22 +118,23 @@ const styles = StyleSheet.create({
   posterBox: {
     width: 72,
     height: 90,
-    backgroundColor: '#f2f2f7',
+    backgroundColor: '#12121e',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e5e5ea',
+    borderColor: 'rgba(255,255,255,0.06)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   posterPlaceholder: {
     width: 28,
     height: 36,
-    backgroundColor: '#e5e5ea',
+    backgroundColor: 'rgba(255,255,255,0.04)',
     borderRadius: 4,
   },
   posterText: {
     fontSize: 8,
-    color: '#c7c7cc',
+    fontWeight: '700',
+    color: '#6b6b88',
     marginTop: 6,
   },
   infoBlock: {
@@ -150,21 +148,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 17,
-    fontWeight: '700',
-    color: '#0a0a0f',
+    fontWeight: '800',
+    color: '#ffffff',
   },
   pastBadge: {
-    backgroundColor: '#f2f2f7',
+    backgroundColor: 'rgba(255,255,255,0.05)',
     borderRadius: 20,
     paddingVertical: 4,
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: '#e5e5ea',
+    borderColor: 'rgba(255,255,255,0.1)',
   },
   pastBadgeText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: '#8e8e93',
+    fontWeight: '700',
+    color: '#6b6b88',
     letterSpacing: 0.5,
   },
   dateRow: {
@@ -184,12 +182,12 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 13,
-    color: '#3c3c43',
+    color: '#6b6b88',
     fontWeight: '500',
   },
   separator: {
     height: 1,
-    backgroundColor: '#f0f0f5',
+    backgroundColor: 'rgba(255,255,255,0.06)',
     marginVertical: 12,
   },
   bottomSection: {
@@ -201,13 +199,13 @@ const styles = StyleSheet.create({
   },
   attendanceLabel: {
     fontSize: 11,
-    color: '#8e8e93',
+    color: '#6b6b88',
     letterSpacing: 0.5,
   },
   attendanceValue: {
     fontSize: 22,
-    fontFamily: 'Bebas Neue',
-    color: '#0a0a0f',
+    fontWeight: '800',
+    color: '#ffffff',
     marginTop: 2,
   },
   trendBlock: {
@@ -215,7 +213,7 @@ const styles = StyleSheet.create({
   },
   trendLabel: {
     fontSize: 11,
-    color: '#8e8e93',
+    color: '#6b6b88',
     letterSpacing: 0.5,
     textAlign: 'right',
   },
@@ -232,10 +230,12 @@ const styles = StyleSheet.create({
   },
   progressTrack: {
     height: 6,
-    backgroundColor: '#f0f0f5',
+    backgroundColor: '#12121e',
     borderRadius: 10,
     overflow: 'hidden',
     marginTop: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
   },
   progressFill: {
     height: '100%',
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginTop: 6,
     fontSize: 12,
-    fontWeight: '600',
-    color: '#0a0a0f',
+    fontWeight: '700',
+    color: '#ffffff',
   }
 });

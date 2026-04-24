@@ -32,12 +32,6 @@ export default function LoginScreen({ navigation }) {
 
                     {/* Hero Section */}
                     <LinearGradient colors={['#3a0c0c', '#0a0a0f']} style={styles.heroSection}>
-                        <View style={styles.marquee}>
-                            {/* Simple static mockup of a marquee */}
-                            <View style={styles.chip}><Text style={styles.chipText}>🎥 Inception</Text></View>
-                            <View style={styles.chip}><Text style={styles.chipText}>🍿 Dune Part 2</Text></View>
-                            <View style={styles.chip}><Text style={styles.chipText}>🎬 Interstellar</Text></View>
-                        </View>
                         <View style={styles.titleRow}>
                             <Text style={styles.titleMovie}>MOVIE</Text>
                             <Text style={styles.titleNight}>NIGHT</Text>
@@ -90,22 +84,7 @@ export default function LoginScreen({ navigation }) {
                             </LinearGradient>
                         </TouchableOpacity>
 
-                        <View style={styles.dividerRow}>
-                            <View style={styles.dividerLine} />
-                            <Text style={styles.dividerText}>or continue with</Text>
-                            <View style={styles.dividerLine} />
-                        </View>
 
-                        <View style={styles.socialRow}>
-                            <TouchableOpacity style={styles.socialButton}>
-                                <Ionicons name="logo-google" size={20} color="#4285F4" />
-                                <Text style={styles.socialText}>Google</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.socialButton}>
-                                <Ionicons name="logo-apple" size={20} color="#fff" />
-                                <Text style={styles.socialText}>Apple</Text>
-                            </TouchableOpacity>
-                        </View>
 
                         <TouchableOpacity style={styles.registerLink} onPress={() => navigation.navigate('SignUp')}>
                             <Text style={{ color: '#6b6b88' }}>Don't have an account? <Text style={styles.registerTextRed}>Sign up</Text></Text>
@@ -121,9 +100,6 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#0a0a0f' },
     heroSection: { height: 240, justifyContent: 'flex-end', paddingBottom: 30, alignItems: 'center' },
-    marquee: { flexDirection: 'row', position: 'absolute', top: 50, opacity: 0.6, gap: 12 },
-    chip: { backgroundColor: 'rgba(255,255,255,0.05)', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#2d2d3d' },
-    chipText: { color: '#fff', fontSize: 13 },
     titleRow: { flexDirection: 'row' },
     titleMovie: { fontSize: 36, color: '#fff', fontWeight: 'bold', letterSpacing: 1 },
     titleNight: { fontSize: 36, color: '#ff3c3c', fontWeight: 'bold', letterSpacing: 1 },
@@ -140,12 +116,7 @@ const styles = StyleSheet.create({
     errorText: { color: '#ff3c3c', fontSize: 13, textAlign: 'center', marginTop: 16, fontWeight: 'bold' },
     primaryButton: { padding: 18, borderRadius: 16, alignItems: 'center', shadowColor: '#ff3c3c', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 10 },
     primaryButtonText: { color: '#fff', fontSize: 18, fontWeight: '700' },
-    dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 32, gap: 16 },
-    dividerLine: { flex: 1, height: 1, backgroundColor: '#2d2d3d' },
-    dividerText: { color: '#6b6b88', fontSize: 13 },
-    socialRow: { flexDirection: 'row', gap: 16 },
-    socialButton: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a1a26', borderWidth: 1, borderColor: '#2d2d3d', borderRadius: 16, height: 56 },
-    socialText: { color: '#fff', fontSize: 16, fontWeight: '600', marginLeft: 8 },
+
     registerLink: { marginTop: 40, alignItems: 'center' },
     registerTextRed: { color: '#ff3c3c', fontWeight: 'bold' }
 });

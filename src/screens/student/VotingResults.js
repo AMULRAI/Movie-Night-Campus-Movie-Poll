@@ -179,24 +179,23 @@ export default function VotingResults() {
 
         {/* ── STATS SUMMARY CARD ── */}
         <View style={styles.statsCard}>
-          <View style={styles.statsLayout}>
-            <View style={styles.statsLeft}>
-              <Text style={styles.statsTotalTitle}>TOTAL VOTES CAST</Text>
-              <Text style={styles.statsBigNumber}>{totalVotes}</Text>
+          <View style={styles.statsTopRow}>
+            <Text style={styles.statsTotalTitle}>TOTAL VOTES CAST</Text>
+            <Text style={styles.statsBigNumber}>{totalVotes}</Text>
+          </View>
+          <View style={styles.statsDivider} />
+          <View style={styles.statsBottomRow}>
+            <View style={styles.statBlock}>
+              <Text style={styles.statBlockValue}>{sortedMovies.length}</Text>
+              <Text style={styles.statBlockLabel}>Options</Text>
             </View>
-            <View style={styles.statsRight}>
-              <View style={styles.statBlock}>
-                <Text style={styles.statBlockValue}>{sortedMovies.length}</Text>
-                <Text style={styles.statBlockLabel}>Options</Text>
-              </View>
-              <View style={styles.statBlock}>
-                <Text style={styles.statBlockValue}>{turnout}%</Text>
-                <Text style={styles.statBlockLabel}>Turnout</Text>
-              </View>
-              <View style={styles.statBlock}>
-                <Text style={[styles.statBlockValue, isUnder10Mins && { color: '#ff3c3c' }]}>{remainingText}</Text>
-                <Text style={styles.statBlockLabel}>Remaining</Text>
-              </View>
+            <View style={styles.statBlock}>
+              <Text style={styles.statBlockValue}>{turnout}%</Text>
+              <Text style={styles.statBlockLabel}>Turnout</Text>
+            </View>
+            <View style={styles.statBlock}>
+              <Text style={[styles.statBlockValue, isUnder10Mins && { color: '#ff3c3c' }]}>{remainingText}</Text>
+              <Text style={styles.statBlockLabel}>Remaining</Text>
             </View>
           </View>
         </View>
@@ -293,15 +292,15 @@ export default function VotingResults() {
           <Text style={styles.percTitle}>Percentage Distribution</Text>
           
           {sortedMovies.map((movie, index) => {
-            let numColor = '#8e8e93';
-            let barColor = '#e5e5ea';
+            let numColor = '#6b6b88';
+            let barColor = 'rgba(255,255,255,0.1)';
             
             if (index === 0) {
-              numColor = '#0a0a0f';
-              barColor = '#1c1c2e';
+              numColor = '#ffffff';
+              barColor = '#ff3c3c';
             } else if (index === 1) {
-              numColor = '#3c3c43';
-              barColor = '#c7c7cc';
+              numColor = '#8e8e93';
+              barColor = 'rgba(255,255,255,0.3)';
             }
 
             const maxPercentage = sortedMovies[0]?.percentage || 100;
@@ -309,7 +308,7 @@ export default function VotingResults() {
             const isLast = index === sortedMovies.length - 1;
 
             return (
-              <View key={movie._id || movie.id || index} style={[styles.percRow, !isLast && { borderBottomWidth: 1, borderBottomColor: '#f0f0f5' }]}>
+              <View key={movie._id || movie.id || index} style={[styles.percRow, !isLast && { borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.06)' }]}>
                 <View style={styles.percPoster}>
                   <View style={styles.percPosterIcon} />
                   <Text style={styles.percPosterText}>POSTER</Text>
@@ -319,7 +318,7 @@ export default function VotingResults() {
                   <Text style={styles.percMovieVotes}>{movie.votes} votes</Text>
                 </View>
                 <View style={styles.percRight}>
-                  <Text style={[styles.percNumber, { color: numColor }]}>{movie.percentage}</Text>
+                  <Text style={[styles.percNumber, { color: numColor }]}>{movie.percentage}%</Text>
                   <View style={styles.percMiniTrack}>
                     <View style={[styles.percMiniFill, { width: barWidth, backgroundColor: barColor }]} />
                   </View>
@@ -447,38 +446,36 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.07)',
   },
-  statsLayout: {
+  statsTopRow: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 0,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  statsLeft: {
-    flex: 1.2,
+  statsDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.07)',
+    marginBottom: 16,
+  },
+  statsBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   statsTotalTitle: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: '700',
     color: '#6b6b88',
-    letterSpacing: 1.2,
+    letterSpacing: 1.5,
   },
   statsBigNumber: {
-    fontSize: 52,
+    fontSize: 48,
     fontWeight: '800',
     color: '#ffffff',
-    lineHeight: 56,
-    marginTop: 2,
-  },
-  statsRight: {
-    flexDirection: 'row',
-    gap: 0,
-    flex: 1,
   },
   statBlock: {
-    flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 12,
-    borderLeftWidth: 1,
-    borderLeftColor: 'rgba(255,255,255,0.07)',
+    flex: 1,
   },
   statBlockValue: {
     fontSize: 22,

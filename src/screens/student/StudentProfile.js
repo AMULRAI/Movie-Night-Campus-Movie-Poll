@@ -41,12 +41,7 @@ export default function StudentProfile() {
     ]);
   };
 
-  const menuItems = [
-    { icon: '🗳️', label: 'Active Polls', route: '/student/polls' },
-    { icon: '🎬', label: 'Suggest a Movie', route: '/student/suggest' },
-    { icon: '📜', label: 'Event History', route: '/student/history' },
-    { icon: '🎟️', label: 'Book a Seat', route: '/student/booking' },
-  ];
+
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -102,25 +97,9 @@ export default function StudentProfile() {
           </View>
         </View>
 
-        {/* ── QUICK NAV ── */}
-        <Text style={styles.sectionLabel}>QUICK NAVIGATE</Text>
-        {menuItems.map((item, idx) => (
-          <TouchableOpacity
-            key={idx}
-            style={styles.menuRow}
-            onPress={() => navigation.navigate(item.route)}
-          >
-            <View style={styles.menuIconBox}>
-              <Text style={{ fontSize: 18 }}>{item.icon}</Text>
-            </View>
-            <Text style={styles.menuLabel}>{item.label}</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
-        ))}
-
         {/* ── LOGOUT ── */}
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <Text style={styles.logoutText}>🚪  Logout</Text>
+          <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
 
       </ScrollView>

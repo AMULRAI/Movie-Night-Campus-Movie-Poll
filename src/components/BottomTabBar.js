@@ -12,7 +12,7 @@ export default function BottomTabBar({ activeTab, role, theme = 'dark' }) {
       { key:'home',    icon:'🏠', label:'Home',    route:'/student/dashboard' },
       { key:'polls',   icon:'🗳️', label:'Polls',   route:'/student/polls' },
       { key:'history', icon:'🕐', label:'History', route:'/student/history' },
-      { key:'suggest', icon:'💡', label:'Suggest', route:'/student/suggest', badge: '3' },
+      { key:'suggest', icon:'💡', label:'Suggest', route:'/student/suggest' },
       { key:'profile', icon:'👤', label:'Profile', route:'/student/profile' },
     ];
   } else if (role === 'admin') {

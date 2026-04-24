@@ -52,7 +52,7 @@ export default function AdminProfile() {
         </View>
 
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <Text style={styles.logoutText}>🚪 Logout</Text>
+          <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </ScrollView>
       <BottomTabBar activeTab="profile" role="admin" />

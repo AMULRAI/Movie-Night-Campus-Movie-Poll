@@ -164,7 +164,7 @@ export default function EventHistory() {
       </ScrollView>
 
       {/* ── BOTTOM TAB BAR ── */}
-      <BottomTabBar activeTab="history" role="student" theme="light" />
+      <BottomTabBar activeTab="history" role="student" />
     </SafeAreaView>
   );
 }
@@ -209,30 +209,26 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   filterPill: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#1c1c2e',
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 18,
     borderWidth: 1,
-    borderColor: '#e5e5ea',
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
-    marginRight: 8, // For gap support in older RN
+    borderColor: 'rgba(255,255,255,0.08)',
+    marginRight: 8,
   },
   filterPillActive: {
-    backgroundColor: '#1c1c2e',
-    borderColor: '#1c1c2e',
+    backgroundColor: 'rgba(255,60,60,0.15)',
+    borderColor: 'rgba(255,60,60,0.3)',
   },
   filterPillText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#3c3c43',
+    color: '#6b6b88',
   },
   filterPillTextActive: {
-    color: '#ffffff',
-    fontWeight: '600',
+    color: '#ff3c3c',
+    fontWeight: '700',
   },
   yearScrollContainer: {
     flexDirection: 'row',
@@ -244,37 +240,33 @@ const styles = StyleSheet.create({
   arrowBtn: {
     width: 28,
     height: 28,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#1c1c2e',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e5e5ea',
+    borderColor: 'rgba(255,255,255,0.08)',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
   },
   arrowText: {
     fontSize: 11,
-    color: '#8e8e93',
+    color: '#6b6b88',
     textAlign: 'center',
   },
   scrollTrack: {
     flex: 1,
     height: 4,
-    backgroundColor: '#e5e5ea',
+    backgroundColor: '#1c1c2e',
     borderRadius: 10,
     marginHorizontal: 8,
   },
   scrollFill: {
     width: '70%',
     height: '100%',
-    backgroundColor: '#1c1c2e',
+    backgroundColor: '#ff3c3c',
     borderRadius: 10,
   },
   statsCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#12121e',
     borderRadius: 20,
     marginHorizontal: 16,
     marginTop: 4,
@@ -283,28 +275,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
   },
   statBlock: {
     alignItems: 'center',
   },
   statValue: {
     fontSize: 28,
-    fontFamily: 'Bebas Neue',
-    color: '#0a0a0f',
+    fontWeight: '800',
+    color: '#ffffff',
   },
   statLabel: {
     fontSize: 12,
-    color: '#8e8e93',
+    color: '#6b6b88',
     marginTop: 2,
   },
   statDivider: {
     width: 1,
     height: 32,
-    backgroundColor: '#f0f0f5',
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
   ratingRow: {
     flexDirection: 'row',
@@ -324,37 +314,35 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 11,
-    fontWeight: '600',
-    color: '#8e8e93',
+    fontWeight: '700',
+    color: '#6b6b88',
     letterSpacing: 1.5,
   },
   sectionCount: {
     fontSize: 12,
-    color: '#8e8e93',
+    color: '#6b6b88',
   },
   emptyStateCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#12121e',
     borderRadius: 20,
     marginHorizontal: 16,
     padding: 40,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
   },
   emptyEmoji: {
     fontSize: 40,
   },
   emptyTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#0a0a0f',
+    fontWeight: '700',
+    color: '#ffffff',
     marginTop: 12,
   },
   emptyDesc: {
     fontSize: 13,
-    color: '#8e8e93',
+    color: '#6b6b88',
     marginTop: 6,
   }
 });

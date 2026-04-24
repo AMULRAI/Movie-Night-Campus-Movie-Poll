@@ -96,21 +96,21 @@ export default function AdminDashboard() {
 
         {/* Stats Cards */}
         <View style={styles.statsGrid}>
-          <View style={styles.statCard}>
+          <TouchableOpacity style={styles.statCard} activeOpacity={0.8} onPress={() => navigation.navigate('/admin/students')}>
             <Text style={styles.statEmoji}>👥</Text>
             <Text style={styles.statValue}>{stats.totalUsers}</Text>
             <Text style={styles.statLabel}>Total Users</Text>
-          </View>
-          <View style={styles.statCard}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.statCard} activeOpacity={0.8} onPress={() => navigation.navigate('/admin/polls')}>
             <Text style={styles.statEmoji}>🗳️</Text>
             <Text style={styles.statValue}>{stats.activePolls}</Text>
             <Text style={styles.statLabel}>Active Polls</Text>
-          </View>
-          <View style={styles.statCard}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.statCard} activeOpacity={0.8} onPress={() => navigation.navigate('/admin/movies')}>
             <Text style={styles.statEmoji}>🎬</Text>
             <Text style={styles.statValue}>{stats.eventsScheduled}</Text>
             <Text style={styles.statLabel}>Events</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.statCard}>
             <Text style={styles.statEmoji}>🎟️</Text>
             <Text style={styles.statValue}>{stats.seatsBooked}</Text>
