@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  StatusBar, Animated, Dimensions, Modal, Pressable
+  StatusBar, Animated, Modal, Pressable
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -10,12 +10,12 @@ import { useAuth } from '../../context/AuthContext';
 import BottomTabBar from '../../components/BottomTabBar';
 import { getMoviesByUser, subscribeToActivePoll, getPastEvents } from '../../services/firestoreService';
 
-const { width } = Dimensions.get('window');
-const CARD_W = (width - 24 * 2 - 12) / 2;
+
 
 
 
 export default function StudentDashboard() {
+
   const { userProfile, user } = useAuth();
   const navigation = useNavigation();
 
@@ -167,12 +167,14 @@ export default function StudentDashboard() {
               activeOpacity={0.75}
               onPress={() => navigation.navigate(action.route)}
             >
-              <View style={[styles.gridCard, { borderColor: action.color + '25', backgroundColor: action.color + '10' }]}>
-                <View style={[styles.gridIconBox, { borderColor: action.color + '40', backgroundColor: action.color + '18' }]}>
+              <View style={[styles.gridCard, { borderColor: action.color + '40', backgroundColor: action.color + '20' }]}>
+                <View style={[styles.gridIconBox, { borderColor: action.color + '60', backgroundColor: action.color + '30' }]}>
                   <Text style={styles.gridIcon}>{action.icon}</Text>
                 </View>
-                <Text style={styles.gridTitle}>{action.title}</Text>
-                <Text style={styles.gridSub}>{action.subtitle}</Text>
+                <View>
+                  <Text style={styles.gridTitle}>{action.title}</Text>
+                  <Text style={styles.gridSub} numberOfLines={2}>{action.subtitle}</Text>
+                </View>
               </View>
             </TouchableOpacity>
           ))}
@@ -243,13 +245,13 @@ const styles = StyleSheet.create({
 
   // ── Actions Grid
   sectionLabel: { fontSize: 12, fontWeight: '800', color: '#6b6b88', letterSpacing: 2, marginBottom: 18, paddingLeft: 4 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
-  gridItem: { width: CARD_W },
-  gridCard: { borderRadius: 24, padding: 20, borderWidth: 1, minHeight: 140, justifyContent: 'space-between' },
-  gridIconBox: { width: 48, height: 48, borderRadius: 16, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 14 },
-  gridIcon: { fontSize: 24 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, justifyContent: 'space-between' },
+  gridItem: { width: '48%', marginBottom: 14 },
+  gridCard: { borderRadius: 24, padding: 18, borderWidth: 1, minHeight: 155, justifyContent: 'space-between' },
+  gridIconBox: { width: 44, height: 44, borderRadius: 14, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
+  gridIcon: { fontSize: 22 },
   gridTitle: { fontSize: 15, fontWeight: '800', color: '#ffffff', marginBottom: 4, letterSpacing: -0.3 },
-  gridSub: { fontSize: 12, color: '#6b6b88', lineHeight: 18, fontWeight: '500' },
+  gridSub: { fontSize: 11, color: '#6b6b88', lineHeight: 16, fontWeight: '500' },
 
 
 });

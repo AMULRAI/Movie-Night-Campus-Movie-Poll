@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Movies (Suggestions)
+    match /movies/{movieId} {
+      // Anyone logged in can read movies
+      allow read: if request.auth != null;
+      // Students can suggest movies
+      allow create: if request.auth != null;
+      // Admins can update (approve) or delete (reject)
+      allow update, delete: if isAdmin();
+    }
+
+    // Polls
+    match /polls/{pollId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Votes
+    match /votes/{voteId} {
+      allow read: if request.auth != null;
+      // Users can vote if logged in. 
+      // The service uses userId + '_' + pollId as the ID.
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Events & Bookings
+    match /events/{eventId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+    
+    match /bookings/{bookingId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // Flags
+    match /flags/{flagId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

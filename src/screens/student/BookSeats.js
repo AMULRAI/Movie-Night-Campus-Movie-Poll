@@ -117,7 +117,7 @@ export default function BookSeats() {
   if (!event) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Event not found</Text>
+        <Text style={styles.loadingText}>Comming Soon...</Text>
       </SafeAreaView>
     );
   }
@@ -128,7 +128,7 @@ export default function BookSeats() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" backgroundColor="#05050d" />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
+
         {/* ── HEADER ── */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -148,7 +148,7 @@ export default function BookSeats() {
             <View style={styles.infoBlock}>
               <Text style={styles.movieTitle}>{event.movieTitle}</Text>
               <Text style={styles.genreDuration}>{event.genre || 'Adventure'} · {event.duration || '166 min'}</Text>
-              
+
               <View style={styles.iconRow}>
                 <Text style={styles.iconEmoji}>📅</Text>
                 <Text style={styles.iconText}>{event.date || 'Fri, Mar 7'} · {event.time || '7:30 PM'}</Text>
@@ -202,9 +202,9 @@ export default function BookSeats() {
           <View style={styles.progressTrack}>
             <Animated.View style={[
               styles.progressFill,
-              { 
+              {
                 width: animRef.interpolate({ inputRange: [0, 1], outputRange: ['0%', filledPercent + '%'] }),
-                backgroundColor: barColor 
+                backgroundColor: barColor
               }
             ]} />
           </View>
@@ -267,17 +267,17 @@ export default function BookSeats() {
 
         {/* ── BOOK SEATS BUTTON ── */}
         {remaining === 0 ? (
-           <View style={[styles.bookBtn, styles.bookBtnDisabledGrey]}>
-             <Text style={styles.bookBtnDisabledText}>NO SEATS AVAILABLE</Text>
-           </View>
+          <View style={[styles.bookBtn, styles.bookBtnDisabledGrey]}>
+            <Text style={styles.bookBtnDisabledText}>NO SEATS AVAILABLE</Text>
+          </View>
         ) : alreadyBooked ? (
-           <View style={[styles.bookBtn, styles.bookBtnSuccess]}>
-             <Text style={styles.bookBtnSuccessText}>✓ ALREADY BOOKED</Text>
-           </View>
+          <View style={[styles.bookBtn, styles.bookBtnSuccess]}>
+            <Text style={styles.bookBtnSuccessText}>✓ ALREADY BOOKED</Text>
+          </View>
         ) : (
-           <TouchableOpacity style={[styles.bookBtn, styles.bookBtnActive]} onPress={openModal}>
-             <Text style={styles.bookBtnActiveText}>BOOK {seatCount} SEATS</Text>
-           </TouchableOpacity>
+          <TouchableOpacity style={[styles.bookBtn, styles.bookBtnActive]} onPress={openModal}>
+            <Text style={styles.bookBtnActiveText}>BOOK {seatCount} SEATS</Text>
+          </TouchableOpacity>
         )}
 
         {/* ── CONFIRMATION MODAL CARD ── */}
@@ -287,12 +287,12 @@ export default function BookSeats() {
               <Text style={styles.modalHeaderEmoji}>🗒️</Text>
               <Text style={styles.modalHeaderTitle}>CONFIRMATION MODAL STATE</Text>
             </View>
-            
+
             <View style={styles.modalInnerBox}>
               <Text style={{ fontSize: 36, marginBottom: 12 }}>🎟️</Text>
               <Text style={styles.modalConfirmTitle}>Confirm Booking?</Text>
               <Text style={styles.modalConfirmDesc}>{seatCount} seats · {event.movieTitle} · {event.date || 'Fri, Mar 7'}</Text>
-              
+
               <View style={styles.modalButtonsRow}>
                 <TouchableOpacity style={styles.btnCancel} onPress={closeModal}>
                   <Text style={styles.btnCancelText}>Cancel</Text>
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
     backgroundColor: '#05050d',
   },
-  
+
   // Header
   header: {
     backgroundColor: '#05050d',

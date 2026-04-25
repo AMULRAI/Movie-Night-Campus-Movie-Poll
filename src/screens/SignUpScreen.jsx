@@ -110,18 +110,7 @@ export default function SignUpScreen({ navigation }) {
                     <TextInput style={styles.input} placeholder="Create a strong password" placeholderTextColor="#6b6b88" secureTextEntry value={password} onChangeText={setPassword} />
                 </View>
                 
-                {/* Password Strength Indicator */}
-                <View style={styles.strengthRow}>
-                    <View style={styles.strengthBarBg}>
-                        <LinearGradient colors={['#ff8c42', '#ffd166']} style={[styles.strengthBarFill, { width: '60%' }]} start={{x:0,y:0}} end={{x:1,y:0}} />
-                    </View>
-                    <Text style={styles.strengthText}>Medium strength — add a number or symbol</Text>
-                </View>
 
-                <View style={styles.checkboxRow}>
-                    <View style={styles.checkbox}><Text style={{ color: '#ff3c3c', fontSize: 12 }}>✓</Text></View>
-                    <Text style={styles.checkboxText}>I agree to the <Text style={styles.redText}>Terms of Service</Text> and <Text style={styles.redText}>Privacy Policy</Text> of MovieNight</Text>
-                </View>
 
                 <TouchableOpacity activeOpacity={0.8} style={{ marginTop: 24 }} onPress={handleSignup} disabled={loading}>
                     <LinearGradient colors={['#ff3c3c', '#ff8c42']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.primaryButton}>
@@ -162,13 +151,6 @@ const styles = StyleSheet.create({
     roleIcon: { fontSize: 24, marginBottom: 8 },
     roleTitle: { color: '#6b6b88', fontSize: 13, fontWeight: '600', marginBottom: 4 },
     roleSub: { color: '#6b6b88', fontSize: 11, textAlign: 'center' },
-    strengthRow: { marginTop: 12 },
-    strengthBarBg: { height: 4, backgroundColor: '#2d2d3d', borderRadius: 2, marginBottom: 8, overflow: 'hidden' },
-    strengthBarFill: { height: '100%', borderRadius: 2 },
-    strengthText: { color: '#ffd166', fontSize: 12 },
-    checkboxRow: { flexDirection: 'row', marginTop: 32, alignItems: 'center', paddingRight: 20 },
-    checkbox: { width: 20, height: 20, borderRadius: 6, borderWidth: 1, borderColor: '#ff3c3c', alignItems: 'center', justifyContent: 'center', marginRight: 12 },
-    checkboxText: { color: '#6b6b88', fontSize: 13, lineHeight: 20 },
     redText: { color: '#ff3c3c' },
     primaryButton: { padding: 18, borderRadius: 16, alignItems: 'center', shadowColor: '#ff3c3c', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 10 },
     primaryButtonText: { color: '#fff', fontSize: 18, fontWeight: '700' },

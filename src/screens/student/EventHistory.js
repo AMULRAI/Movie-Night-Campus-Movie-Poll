@@ -94,18 +94,6 @@ export default function EventHistory() {
           })}
         </ScrollView>
 
-        {/* ── YEAR SCROLL BAR ── */}
-        <View style={styles.yearScrollContainer}>
-          <View style={styles.arrowBtn}>
-            <Text style={styles.arrowText}>◀</Text>
-          </View>
-          <View style={styles.scrollTrack}>
-            <View style={styles.scrollFill} />
-          </View>
-          <View style={styles.arrowBtn}>
-            <Text style={styles.arrowText}>▶</Text>
-          </View>
-        </View>
 
         {/* ── STATS SUMMARY CARD ── */}
         <View style={styles.statsCard}>
@@ -117,14 +105,6 @@ export default function EventHistory() {
           <View style={styles.statBlock}>
             <Text style={styles.statValue}>{attended}</Text>
             <Text style={styles.statLabel}>Attended</Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statBlock}>
-            <View style={styles.ratingRow}>
-              <Text style={styles.statValue}>4.2</Text>
-              <Text style={styles.starEmoji}>★</Text>
-            </View>
-            <Text style={styles.statLabel}>Avg Rating</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statBlock}>
@@ -230,41 +210,6 @@ const styles = StyleSheet.create({
     color: '#ff3c3c',
     fontWeight: '700',
   },
-  yearScrollContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-    alignItems: 'center',
-    gap: 8,
-  },
-  arrowBtn: {
-    width: 28,
-    height: 28,
-    backgroundColor: '#1c1c2e',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  arrowText: {
-    fontSize: 11,
-    color: '#6b6b88',
-    textAlign: 'center',
-  },
-  scrollTrack: {
-    flex: 1,
-    height: 4,
-    backgroundColor: '#1c1c2e',
-    borderRadius: 10,
-    marginHorizontal: 8,
-  },
-  scrollFill: {
-    width: '70%',
-    height: '100%',
-    backgroundColor: '#ff3c3c',
-    borderRadius: 10,
-  },
   statsCard: {
     backgroundColor: '#12121e',
     borderRadius: 20,
@@ -295,15 +240,6 @@ const styles = StyleSheet.create({
     width: 1,
     height: 32,
     backgroundColor: 'rgba(255,255,255,0.08)',
-  },
-  ratingRow: {
-    flexDirection: 'row',
-  },
-  starEmoji: {
-    fontSize: 16,
-    color: '#ffd166',
-    marginLeft: 2,
-    marginTop: -4,
   },
   sectionHeaderRow: {
     flexDirection: 'row',

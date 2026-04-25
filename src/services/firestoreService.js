@@ -127,7 +127,11 @@ export function subscribeToActivePoll(callback) {
       callback(polls[0] || null)
     },
     error: (error) => {
-      console.log("subscribeToActivePoll error:", error.message);
+      console.error("🔥 Firestore: subscribeToActivePoll failed!", {
+        message: error.message,
+        code: error.code,
+        hint: "Check if your Firestore Security Rules allow reading from 'polls' collection."
+      });
       callback(null);
     }
   })
@@ -192,7 +196,11 @@ export function subscribeToVoteCounts(pollId, callback) {
       callback(counts)
     },
     error: (error) => {
-      console.log("subscribeToVoteCounts error:", error.message);
+      console.error("🔥 Firestore: subscribeToVoteCounts failed!", {
+        message: error.message,
+        code: error.code,
+        hint: "Check if your Firestore Security Rules allow reading from 'votes' collection."
+      });
       callback({});
     }
   })
