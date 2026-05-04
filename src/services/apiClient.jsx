@@ -4,11 +4,10 @@
  * purely client-side via Firebase SDK.
  */
 
-// If running on Android Emulator, localhost is 10.0.2.2. If iOS, it's localhost.
-// Assuming Web or general use for now (can map via ENV later)
 import { Platform } from 'react-native';
 
-const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5000/api' : 'http://localhost:5000/api';
+const LOCAL_API_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5000/api' : 'http://localhost:5000/api';
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || LOCAL_API_URL;
 
 export const banUserAPI = async (userId) => {
     try {
