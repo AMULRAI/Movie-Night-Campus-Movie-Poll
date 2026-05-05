@@ -1,5 +1,38 @@
+/*
+ * ============================================================================
+ * FILE: AdminManagePolls.js — POLL CREATION & MANAGEMENT SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * The admin screen for creating and managing voting polls:
+ *   - Shows the currently active poll (if any) with a "Force Close" button
+ *   - Poll creation form with title input and movie selector (checkboxes)
+ *   - Movie list from approved movies — admin checks which to include
+ *   - "Publish Live Poll" button creates and activates the poll instantly
+ *
+ * IMPORTANT BUSINESS LOGIC:
+ * - Only ONE poll can be active at a time. If there's already an active poll,
+ *   creating a new one automatically closes the existing one first.
+ * - At least 2 movies must be selected for a valid poll.
+ *
+ * TECHNICAL TERMS:
+ * - "toggleMovie": A function that adds/removes a movie from the selected
+ *   list. Uses the functional form of setState (prev => ...) to avoid
+ *   stale state issues.
+ * - "prev.filter(m => m !== id)": Removes a specific ID from an array.
+ * - "[...prev, id]": Adds a new ID to the end of an array (spread operator).
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/admin/manage-polls' (defined in AppNavigator.jsx)
+ * - Uses: getApprovedMovies, createPoll, closePoll, subscribeToActivePoll
+ *         from firestoreService
+ */
+
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TextInput, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
+import { ScrollView, View, Text, TextInput, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../context/AuthContext';

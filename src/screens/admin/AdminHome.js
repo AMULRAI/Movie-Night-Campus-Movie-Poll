@@ -1,5 +1,35 @@
+/*
+ * ============================================================================
+ * FILE: AdminHome.js — ADMIN HOME / OVERVIEW PANEL
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * This is the main home screen for admin users. It provides a high-level
+ * overview of the app's status and quick access to all admin functions:
+ *   - Admin name, email, and logout button in the header
+ *   - A stats grid showing: active polls, total movies, pending approvals, votes
+ *   - An active poll card with a "Manage Poll" button
+ *   - Quick action cards linking to: Manage Polls, Approve Movies,
+ *     View Students, and Analytics Dashboard
+ *
+ * DATA LOADING:
+ * - On mount, it fetches pending and approved movies from Firestore
+ * - It subscribes to real-time active poll updates (so it instantly
+ *   shows when a poll is created or closed)
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/admin/polls' (defined in AppNavigator.jsx)
+ * - Also rendered by HomeScreen.jsx when the user is an admin
+ * - Uses: getPendingMovies, getApprovedMovies, subscribeToActivePoll from firestoreService
+ * - Uses: logoutUser from authService
+ * - Navigates to: /admin/manage-polls, /admin/movies, /admin/students, /admin/dashboard, Login
+ */
+
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../context/AuthContext';

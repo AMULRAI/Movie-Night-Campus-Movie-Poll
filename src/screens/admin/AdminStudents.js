@@ -1,5 +1,35 @@
+/*
+ * ============================================================================
+ * FILE: AdminStudents.js — STUDENT MANAGEMENT & MODERATION SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * Lists all registered users and allows admins to ban students:
+ *   - Shows every user with avatar, name, email, and role
+ *   - "Ban" button on each non-admin student card (with confirmation dialog)
+ *   - Banned users show strikethrough name, "BANNED" badge, and are sorted
+ *     to the bottom of the list
+ *   - After banning, the list auto-scrolls to show the banned user
+ *
+ * TECHNICAL TERMS:
+ * - "useRef": A React hook that creates a persistent reference. Here it
+ *   holds a reference to the ScrollView so we can programmatically
+ *   scroll it (scrollRef.current.scrollToEnd).
+ * - "sort()": Re-sorts the student array so banned users appear last.
+ * - The ban function uses firestoreService.banUser() which tries the
+ *   backend API first, then falls back to direct Firestore update.
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/admin/students' (defined in AppNavigator.jsx)
+ * - Uses: banUser from firestoreService
+ * - Uses: db, collection, getDocs from firebaseConfig/firestore (direct query)
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import BottomTabBar from '../../components/BottomTabBar';
 import { banUser } from '../../services/firestoreService';

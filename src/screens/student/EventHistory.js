@@ -1,3 +1,31 @@
+/*
+ * ============================================================================
+ * FILE: EventHistory.js — PAST EVENTS BROWSING SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * Shows a history of all past movie night events with filtering:
+ *   - Filter tabs: All, Attended, Missed, 2026
+ *   - Stats summary: total events, attended count, satisfaction %
+ *   - Event cards rendered via EventHistoryCard component
+ *   - Empty state when no events match the filter
+ *
+ * TECHNICAL TERMS:
+ * - "useMemo": A React hook that caches (memoizes) a computed value.
+ *   It only recalculates when its dependencies change. Here it's used
+ *   to avoid re-filtering the events array on every render — only
+ *   re-filters when the filter or events data changes.
+ * - "Promise.all": Runs multiple async operations simultaneously and
+ *   waits for ALL of them to complete. Faster than running one-by-one.
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/history' (defined in AppNavigator.jsx)
+ * - Uses: getPastEvents, getUserAttendedEvents from firestoreService
+ * - Renders: EventHistoryCard component for each event
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StatusBar, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

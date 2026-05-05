@@ -1,3 +1,29 @@
+/*
+ * ============================================================================
+ * FILE: StudentProfile.js — STUDENT PROFILE & SETTINGS SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * Displays the student's profile information and provides a logout option:
+ *   - Avatar with initials and gradient background
+ *   - Full name, email, and "STUDENT" role badge
+ *   - Stats row: suggestion count, student badge, verified status
+ *   - Account details card: Student ID, email, role
+ *   - Logout button with confirmation dialog
+ *
+ * DATA LOADING:
+ * - Fetches the user's suggestion count (number of movies suggested)
+ *   to display in the stats section
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/profile' (defined in AppNavigator.jsx)
+ * - Uses: useAuth() for user data
+ * - Uses: logoutUser from authService, getMoviesByUser from firestoreService
+ * - Navigates to: 'Login' (after logout)
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar, Alert

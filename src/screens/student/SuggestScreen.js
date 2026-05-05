@@ -1,3 +1,35 @@
+/*
+ * ============================================================================
+ * FILE: SuggestScreen.js — MOVIE SUGGESTION FORM + ADMIN APPROVAL VIEW
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * A dual-purpose screen:
+ *   FOR STUDENTS: Shows a form to suggest a new movie (name, genre, language,
+ *     duration) plus a list of their past submissions with approval status.
+ *   FOR ADMINS: Shows the same suggestion form PLUS an "Admin View" toggle
+ *     that reveals approve/reject buttons on each pending suggestion.
+ *
+ * FORM FIELDS:
+ *   - Movie Name (text input)
+ *   - Genre (custom dropdown selector from a predefined list)
+ *   - Language (custom dropdown selector from a predefined list)
+ *   - Duration in minutes (numeric text input)
+ *
+ * TECHNICAL TERMS:
+ * - "Custom Dropdown": Instead of React Native's Picker (which looks
+ *   different on iOS/Android), we built our own dropdown using
+ *   TouchableOpacity + a conditional list. Tapping the button toggles
+ *   the list visibility (showGenreDropdown / showLanguageDropdown).
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/suggest' (defined in AppNavigator.jsx)
+ * - Uses: suggestMovie, getPendingMovies, getMoviesByUser, approveMovie,
+ *         rejectMovie from firestoreService
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   ScrollView,

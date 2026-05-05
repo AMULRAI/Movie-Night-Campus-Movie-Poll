@@ -1,3 +1,34 @@
+/*
+ * ============================================================================
+ * FILE: BookSeats.js — SEAT BOOKING SCREEN FOR MOVIE EVENTS
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * Allows students to book seats for a movie screening event. Features:
+ *   - Movie info hero card (title, genre, date, venue, tags)
+ *   - Seat availability card with animated progress bar
+ *   - Seat counter (+/- buttons, max 4 per booking)
+ *   - Booking confirmation modal with animation
+ *   - States: Available, Already Booked, Fully Booked, No Seats
+ *
+ * REAL-TIME: Subscribes to the event document so seat availability
+ * updates live as others book seats.
+ *
+ * TECHNICAL TERMS:
+ * - "useRoute": React Navigation hook that gives access to the current
+ *   screen's parameters (e.g., eventId passed from the previous screen).
+ * - "Animated.spring": Creates a bouncy spring animation (used for the
+ *   confirmation modal appearance).
+ * - "Animated.parallel": Runs multiple animations at the same time.
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/booking' (defined in AppNavigator.jsx)
+ * - Receives: { eventId } via route.params
+ * - Uses: subscribeToEvent, getUserBooking, bookSeat from firestoreService
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Animated, Alert, ActivityIndicator, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

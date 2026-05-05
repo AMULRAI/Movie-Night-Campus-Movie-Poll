@@ -1,3 +1,33 @@
+/*
+ * ============================================================================
+ * FILE: StudentHome.js — LIVE VOTING / ACTIVE POLL SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * This is where students VOTE for movies in the active poll. It shows:
+ *   - Header with "LIVE POLLS" title and user avatar
+ *   - Live status indicator (green "LIVE" badge with total votes)
+ *   - Poll title card showing the current week's poll name
+ *   - "Vote Recorded" banner (appears after the user votes)
+ *   - Movie cards (MovieVoteCard) for each movie in the poll
+ *   - If no poll is active: "No Active Poll" state with quick links
+ *
+ * REAL-TIME FEATURES:
+ * - Subscribes to the active poll → updates automatically when admin
+ *   creates/closes a poll
+ * - Subscribes to vote counts → progress bars update live as people vote
+ * - Checks if the current user already voted (prevents double-voting)
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/polls' (defined in AppNavigator.jsx)
+ * - Uses: subscribeToActivePoll, subscribeToVoteCounts, getUserVote,
+ *         submitVote, getApprovedMovies from firestoreService
+ * - Renders: MovieVoteCard component for each movie
+ * - Navigates to: /student/profile, /student/suggest, /student/history, /student/results
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,

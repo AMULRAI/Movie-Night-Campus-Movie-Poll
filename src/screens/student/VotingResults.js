@@ -1,3 +1,30 @@
+/*
+ * ============================================================================
+ * FILE: VotingResults.js — LIVE VOTING RESULTS & ANALYTICS SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * Displays live voting results with animated charts and statistics:
+ *   - Stats summary: total votes, number of options, voter turnout, time remaining
+ *   - Winner card with 🏆 trophy and animated progress bar
+ *   - Vote distribution bars (sorted by votes, with staggered animations)
+ *   - Percentage distribution with mini progress bars per movie
+ *   - Status footer showing ACTIVE/CLOSED state with pulsing dot
+ *
+ * REAL-TIME FEATURES:
+ * - Subscribes to active poll + vote counts → everything updates live
+ * - Live countdown timer (refreshes every second)
+ * - Animated progress bars re-animate when vote counts change
+ * - Pulsing dot animation when poll is active
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/results' (defined in AppNavigator.jsx)
+ * - Uses: subscribeToActivePoll, subscribeToVoteCounts, getApprovedMovies
+ *         from firestoreService
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Animated, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

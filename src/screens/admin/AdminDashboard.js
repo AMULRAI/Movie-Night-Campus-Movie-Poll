@@ -1,5 +1,32 @@
+/*
+ * ============================================================================
+ * FILE: AdminDashboard.js — ADMIN ANALYTICS & MODERATION DASHBOARD
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * The admin analytics dashboard shows real-time statistics, moderation tools,
+ * and system health metrics. It includes:
+ *   - System stats cards (total users, active polls, events, seat availability)
+ *   - Active poll monitoring with live vote counts
+ *   - Flagged user list for moderation (reported users)
+ *   - Ban user functionality
+ *
+ * DATA LOADING:
+ * - Uses getAdminStats() for aggregate stats (counts from all collections)
+ * - Subscribes to the active poll for real-time vote tracking
+ * - Fetches flagged users for moderation review
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/admin/dashboard' (defined in AppNavigator.jsx)
+ * - Uses: getAdminStats, subscribeToActivePoll, getFlaggedUsers, banUser from firestoreService
+ * - Navigates to: /admin/manage-polls, /admin/movies, /admin/students
+ */
+
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert, Switch } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert, Switch } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
 import { getAdminStats, getFlaggedUsers, banUser, subscribeToActivePoll, subscribeToVoteCounts } from '../../services/firestoreService';

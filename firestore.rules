@@ -1,57 +1,165 @@
+/*
+ * ============================================================================
+ * FILE: firestore.rules — DATABASE SECURITY RULES
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * Defines WHO can READ and WRITE to each collection in the Firestore database.
+ * These rules run on Firebase's servers — they can't be bypassed from the
+ * client app. Think of them as the "bouncer" at each database table.
+ *
+ * RULE LOGIC SUMMARY:
+ *   - All reads require authentication (must be logged in)
+ *   - Users can only write their own profile
+ *   - Students can suggest movies but can't approve/reject them
+ *   - Only admins can create/close polls, manage events, and moderate
+ *   - Votes are write-once: users can create a vote but never edit/delete it
+ *   - Bookings: users can read only their own, admins can read all
+ *
+ * TECHNICAL TERMS:
+ * - "request.auth": The authenticated user making the request. Is null if
+ *   not logged in. Contains uid (user's ID).
+ * - "request.auth.uid": The unique ID of the user making the request.
+ * - "request.resource.data": The data being sent in a write request.
+ * - "resource.data": The existing data in the document (before changes).
+ * - "get()": Reads another document. Used here to check the user's role
+ *   by reading their profile from the 'users' collection.
+ * - "allow read/write: if <condition>": Only allows the operation if the
+ *   condition evaluates to true. If false, Firebase returns "permission denied".
+ *
+ * CONNECTIONS:
+ * - These rules protect ALL data accessed by firestoreService.js
+ * - Deployed to Firebase via: firebase deploy --only firestore:rules
+ */
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper function to check if user is admin
+    /*
+     * HELPER FUNCTION: isAdmin()
+     * ---------------------------
+     * Checks if the current user is an admin by reading their profile
+     * document from the 'users' collection and checking the 'role' field.
+     *
+     * This function is called in several rules below to restrict
+     * write access to admin-only operations.
+     *
+     * NOTE: get() counts as a read operation and has a limit per request.
+     * Each security rule evaluation can call get() up to 10 times.
+     */
     function isAdmin() {
       return request.auth != null && 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // User Profiles
+    /*
+     * USERS COLLECTION — /users/{userId}
+     * ------------------------------------
+     * READ: Any authenticated user can read any user profile.
+     *   (Needed for: displaying user names, admin viewing student list)
+     *
+     * WRITE: Users can ONLY write to their OWN profile document.
+     *   The condition "request.auth.uid == userId" ensures a user can't
+     *   modify someone else's profile. The {userId} matches the document ID.
+     */
     match /users/{userId} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Movies (Suggestions)
+    /*
+     * MOVIES COLLECTION — /movies/{movieId}
+     * ---------------------------------------
+     * READ: Any authenticated user can read movies.
+     *   (Students need to see approved movies for voting)
+     *
+     * CREATE: Any authenticated user can suggest a new movie.
+     *   (Students submit movie suggestions via SuggestScreen)
+     *
+     * UPDATE/DELETE: Only admins can approve (update) or reject (delete).
+     *   Students cannot modify or remove existing movie suggestions.
+     */
     match /movies/{movieId} {
-      // Anyone logged in can read movies
       allow read: if request.auth != null;
-      // Students can suggest movies
       allow create: if request.auth != null;
-      // Admins can update (approve) or delete (reject)
       allow update, delete: if isAdmin();
     }
 
-    // Polls
+    /*
+     * POLLS COLLECTION — /polls/{pollId}
+     * ------------------------------------
+     * READ: Any authenticated user can read polls.
+     *   (Students need to see the active poll for voting)
+     *
+     * WRITE: Only admins can create, update (close), or delete polls.
+     *   Students should never be able to create or manipulate polls.
+     */
     match /polls/{pollId} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
     }
 
-    // Votes
+    /*
+     * VOTES COLLECTION — /votes/{voteId}
+     * ------------------------------------
+     * READ: Any authenticated user can read votes.
+     *   (Needed for: live vote counts, checking if user already voted)
+     *
+     * CREATE: Any authenticated user can create a vote, BUT the vote's
+     *   userId field MUST match their own auth UID. This prevents
+     *   someone from casting a vote on behalf of another user.
+     *   The condition: request.resource.data.userId == request.auth.uid
+     *
+     * UPDATE/DELETE: NOBODY can modify or delete votes (set to false).
+     *   Votes are permanent and immutable once cast. This prevents
+     *   vote manipulation.
+     */
     match /votes/{voteId} {
       allow read: if request.auth != null;
-      // Users can vote if logged in. 
-      // The service uses userId + '_' + pollId as the ID.
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
 
-    // Events & Bookings
+    /*
+     * EVENTS COLLECTION — /events/{eventId}
+     * ---------------------------------------
+     * READ: Any authenticated user can read events.
+     *   (Students see event details for booking)
+     *
+     * WRITE: Only admins can create or modify events.
+     */
     match /events/{eventId} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
     }
     
+    /*
+     * BOOKINGS COLLECTION — /bookings/{bookingId}
+     * ---------------------------------------------
+     * READ: A user can read their OWN bookings (resource.data.userId == uid),
+     *   OR an admin can read ANY booking (for management purposes).
+     *
+     * CREATE: Any authenticated user can create a booking, BUT the
+     *   booking's userId field must match their own UID (can't book
+     *   on behalf of others).
+     *
+     * UPDATE/DELETE: Only admins can modify or cancel bookings.
+     */
     match /bookings/{bookingId} {
       allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if isAdmin();
     }
 
-    // Flags
+    /*
+     * FLAGS COLLECTION — /flags/{flagId}
+     * ------------------------------------
+     * READ & WRITE: Only admins can access flags.
+     *   Flags contain moderation reports about users. Students should
+     *   never be able to see or modify these records.
+     */
     match /flags/{flagId} {
       allow read, write: if isAdmin();
     }

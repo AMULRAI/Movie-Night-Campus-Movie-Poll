@@ -1,5 +1,34 @@
+/*
+ * ============================================================================
+ * FILE: AdminMovies.js — MOVIE APPROVAL / REVIEW SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * The admin moderation screen for reviewing student movie suggestions:
+ *   - Shows all PENDING (unapproved) movies in a list
+ *   - Each movie card has individual "Approve" and "Reject" buttons
+ *   - Supports BULK actions: Select All → Approve All / Reject All
+ *   - Selection via checkboxes on each card (tap card to toggle selection)
+ *   - Empty state when there are no pending suggestions
+ *
+ * TECHNICAL TERMS:
+ * - "Bulk actions": Performing the same action on multiple items at once.
+ *   Uses Promise.all() to approve/reject all selected movies simultaneously.
+ * - "Promise.all()": Runs multiple async operations in parallel and waits
+ *   for ALL to complete. Much faster than doing them one by one.
+ * - "toggleSelect": Adds or removes a movie ID from the selected list,
+ *   similar to checking/unchecking a checkbox.
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/admin/movies' (defined in AppNavigator.jsx)
+ * - Uses: getPendingMovies, approveMovie, rejectMovie from firestoreService
+ */
+
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, StatusBar, StyleSheet, Platform, ActivityIndicator, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomTabBar from '../../components/BottomTabBar';

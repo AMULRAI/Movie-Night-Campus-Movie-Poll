@@ -1,3 +1,31 @@
+/*
+ * ============================================================================
+ * FILE: StudentDashboard.js — STUDENT MAIN DASHBOARD / HOME SCREEN
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * The primary home screen for students. It provides a personalized overview:
+ *   - Greeting header with time-based message (Good Morning/Afternoon/Evening)
+ *   - Profile avatar with initials (navigates to profile on tap)
+ *   - Hero banner showing the active poll status (LIVE or NO ACTIVE POLL)
+ *   - Stats row: number of movies suggested, active polls, event history
+ *   - Quick action grid: 6 cards linking to all student features
+ *     (Polls, Suggest Movie, Book Seat, Past Events, Results, Profile)
+ *
+ * DATA LOADING:
+ * - Fetches user's suggested movies count on mount
+ * - Subscribes to active poll for real-time hero banner updates
+ * - Fetches past events count for the stats row
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: '/student/dashboard' (defined in AppNavigator.jsx)
+ * - Also rendered by HomeScreen.jsx when the user is a student
+ * - Uses: getMoviesByUser, subscribeToActivePoll, getPastEvents from firestoreService
+ * - Navigates to: all /student/* routes
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,

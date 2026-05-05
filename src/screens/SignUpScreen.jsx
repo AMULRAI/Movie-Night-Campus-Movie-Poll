@@ -1,17 +1,71 @@
+/*
+ * ============================================================================
+ * FILE: SignUpScreen.jsx — USER REGISTRATION FORM
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * This screen allows new users to create an account. It collects:
+ *   - First name and last name
+ *   - Student ID / Roll number
+ *   - Campus email address
+ *   - Role selection (Student or Admin via tappable cards)
+ *   - Password
+ *
+ * After validating all fields, it calls registerUser() from authService
+ * to create the Firebase Auth account and Firestore profile simultaneously.
+ *
+ * TECHNICAL TERMS EXPLAINED:
+ * --------------------------
+ * - "Form Validation": Checking that all required fields are filled in
+ *   correctly before submitting. We validate: non-empty fields, email
+ *   contains '@', and password is at least 6 characters.
+ *
+ * - "navigation.goBack()": Goes back to the previous screen (Login).
+ *   Unlike navigate(), it pops the current screen off the stack.
+ *
+ * - "navigation.replace('Home')": Replaces the current screen with Home.
+ *   The user can't go back to SignUp (since they just registered).
+ *
+ * - "Role selection cards": Instead of a dropdown, we use tappable cards
+ *   (Student 🎓 vs Admin 🛡️). The selected card gets highlighted with
+ *   a red border (styles.roleCardActive).
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Route name: 'SignUp' (defined in AppNavigator.jsx)
+ * - Navigated to from: LoginScreen.jsx ("Sign up" link)
+ * - Uses: registerUser() from authService.js
+ * - Navigates to: 'Home' (on success) or back to 'Login' (back button)
+ */
+
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { registerUser } from '../services/authService';
 
 export default function SignUpScreen({ navigation }) {
+    // Form state variables — each stores the value of one input field
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [studentId, setStudentId] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('student');
-    const [loading, setLoading] = useState(false);
+    const [role, setRole] = useState('student'); // Default role is 'student'
+    const [loading, setLoading] = useState(false); // Controls the button spinner
 
+    /*
+     * SIGNUP HANDLER
+     * ---------------
+     * Called when the user taps "Create Account".
+     * 1. Validates all fields are filled in
+     * 2. Checks email has @ symbol
+     * 3. Checks password is at least 6 characters
+     * 4. Calls registerUser() to create the account
+     * 5. On success: replaces screen with Home
+     * 6. On failure: shows error alert
+     */
     const handleSignup = async () => {
         if (!firstName.trim() || !lastName.trim() || !studentId.trim() || !email.trim() || !password) {
             Alert.alert('Error', 'Please fill in all fields.');

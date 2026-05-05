@@ -1,3 +1,40 @@
+/*
+ * ============================================================================
+ * FILE: EventHistoryCard.js — PAST EVENT CARD WITH ATTENDANCE VISUALIZATION
+ * ============================================================================
+ *
+ * WHAT THIS FILE DOES:
+ * --------------------
+ * A reusable card component that displays a past movie night event with:
+ *   - Movie poster placeholder with "PAST" badge
+ *   - Event title, date, and venue
+ *   - Attendance counter (e.g., "45/50")
+ *   - Mini bar chart showing "popularity trend" over time
+ *   - Animated full-width progress bar for attendance percentage
+ *   - Color-coded bar: green for >=90%, orange for >=70%, red for <70%
+ *
+ * PROPS:
+ * - title: Movie/event name
+ * - date: Event date string
+ * - venue: Event location
+ * - attendance: Number of people who attended
+ * - totalSeats: Total available seats
+ * - popularityTrend: Array of numbers for the mini bar chart
+ * - status: Event status string
+ *
+ * TECHNICAL TERMS:
+ * - "Mini bar chart": A tiny visualization using small rectangles whose
+ *   height is proportional to the data value. The last bar is highlighted
+ *   red to show the most recent data point.
+ * - "Math.max(...array)": Finds the highest number in the array. Used
+ *   to normalize bar heights so they're relative to the maximum value.
+ *
+ * CONNECTIONS:
+ * -----------
+ * - Used by: EventHistory.js screen
+ * - Receives event data from getPastEvents() in firestoreService
+ */
+
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 
